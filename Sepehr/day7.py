@@ -7,7 +7,6 @@ class Day7:
         self.color_to_find = 'shinygoldbags'
         self.total_bags_in_gold()
 
-
     def total_bags_in_gold(self):
         res = self._total_bags_in_gold('shinygoldbags')
         print(res)
@@ -22,21 +21,17 @@ class Day7:
             total_bags = total_bags + int(self.bag_dict[bag_color][bag]) * (self._total_bags_in_gold(bag) +1)
         return total_bags
 
-    def _find_gold(self, bag_color):
-        depth_counter = 1
+    def contains_gold_bag(self):
+        self._contains_gold_bag('shinygoldbags')
+        # Popa raden som är ytters då svaret diffar med 1
+        self.bag_containing_spec_color.pop('shinygoldbags')
+        return len(self.bag_containing_spec_color)
+
+    def _contains_gold_bag(self, bag_color):
         for bag in self.bag_dict:
             self.bag_containing_spec_color[bag_color] ='New color!'
             if bag_color in self.bag_dict[bag]:
-                self._find_gold(bag)
-                #depth_counter += self._find_gold(bag)
-        return depth_counter
-
-    def find_gold(self):
-        self._find_gold('shinygoldbags')
-        # Ta bort raden shinygoldbag för vi får fel med ett
-        self.bag_containing_spec_color.pop('shinygoldbags')
-        print(self.bag_containing_spec_color)
-        return len(self.bag_containing_spec_color)
+                self._contains_gold_bag(bag)
 
     def _format_data(self):
         input = open('inputs/input7.txt', 'r')
@@ -48,7 +43,7 @@ class Day7:
             if bag_info[1] != 'nootherbags':
                 bag_info[1:] = bag_info[1].split(',')
             self._add_bag_info(bag_info)
-        self.find_gold()
+        self.contains_gold_bag()
 
     def _add_bag_info(self, bags):
         inner_bag = dict()
@@ -67,5 +62,8 @@ class Day7:
 
 if __name__ == '__main__':
     puzzle = Day7()
-    #puzzle.print()
-    print(len(puzzle.bag_containing_spec_color))
+
+    print('Part 1 is: {} \nPart 2 is: {}'.format(   puzzle.contains_gold_bag(),
+                                                    puzzle.total_bags_in_gold()
+                                                    )
+                                                    )
